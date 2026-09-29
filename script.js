@@ -6,8 +6,11 @@
   The 3D view is built in scene3d.js.
 */
 
-// Must match host and port in backend/app.py.
-const API_URL = "http://127.0.0.1:5000/calculate";
+// The deployed Flask backend, so the page works without running Python.
+// To use a backend on your own computer instead, comment out the first line
+// and use the second one. The address must match host and port in app.py.
+const API_URL = "https://projectile-motion-backend.vercel.app/calculate";
+// const API_URL = "http://127.0.0.1:5000/calculate";
 
 // Colors reused from style.css so the graph matches the rest of the page.
 const LINE_COLOR = "#34d399";
@@ -115,7 +118,8 @@ async function requestCalculation(velocity, angle) {
     });
   } catch (networkError) {
     showError(
-      "Could not reach the backend. Open the backend folder and run: python app.py"
+      "Could not reach the calculation server. Check your internet connection, " +
+        "then try again."
     );
   } finally {
     button.disabled = false;

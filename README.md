@@ -4,7 +4,7 @@ The web page for a projectile motion calculator. You enter an initial velocity a
 
 It is plain HTML, CSS, and vanilla JavaScript. There is no build step and nothing to install.
 
-All the physics is calculated by a Flask API in a separate repository: [projectile-motion-backend](https://github.com/itsfarhanpk/projectile-motion-backend). **The page needs that backend running to produce results.**
+All the physics is calculated by a Flask API in a separate repository: [projectile-motion-backend](https://github.com/itsfarhanpk/projectile-motion-backend). That API is deployed at **https://projectile-motion-backend.vercel.app**, and this page calls it by default, so you do not need to run Python to use the calculator.
 
 ## Features
 
@@ -27,9 +27,7 @@ frontend/
 
 ## How to run
 
-First start the backend from the [backend repository](https://github.com/itsfarhanpk/projectile-motion-backend), so it is listening on `http://127.0.0.1:5000`.
-
-Then serve this folder. Any small static server works; Python has one built in:
+Serve this folder with any small static server. Python has one built in:
 
 ```bash
 python -m http.server 5500
@@ -41,19 +39,22 @@ Open:
 http://127.0.0.1:5500
 ```
 
+That is all. The calculations come from the deployed API, so no backend setup is needed.
+
 Use a local server rather than double-clicking `index.html`. `scene3d.js` is a JavaScript module, and browsers block modules on pages opened directly from the file system.
 
-The page and the API are on different ports, which the browser treats as different origins. The backend allows the request with `flask-cors`.
+The page and the API are on different origins, which the browser normally blocks. The backend allows the request with `flask-cors`.
 
-## Pointing at a different backend
+## Using a local backend instead
 
-The address is one line near the top of `script.js`:
+Useful when you are changing the physics code. Start the API from the
+[backend repository](https://github.com/itsfarhanpk/projectile-motion-backend) so it listens on
+`http://127.0.0.1:5000`, then switch the address near the top of `script.js`:
 
 ```js
+// const API_URL = "https://projectile-motion-backend.vercel.app/calculate";
 const API_URL = "http://127.0.0.1:5000/calculate";
 ```
-
-Change it if you run the backend on another port or deploy it somewhere.
 
 ## How to read the 3D view
 
