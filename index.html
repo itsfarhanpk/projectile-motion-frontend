@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projectile Motion Calculator</title>
+
+  <!-- Fonts are optional. If they do not load, the fallbacks in style.css are used. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <p class="badge"><span class="dot"></span> Physics · ideal projectile model</p>
+      <h1>Projectile Motion Calculator</h1>
+      <p class="lede">
+        Projectile motion is the curved path an object follows after it is launched,
+        when gravity is the only force acting on it. The motion splits into two
+        independent parts: a steady horizontal drift and a vertical rise-and-fall.
+        Enter a launch speed and angle to get the range, maximum height, and flight
+        time, then rotate the 3D view to see why the path is a parabola.
+      </p>
+      <ul class="chips">
+        <li>g = 9.81 m/s²</li>
+        <li>No air resistance</li>
+        <li>Launch and landing at the same height</li>
+      </ul>
+    </header>
+
+    <div class="layout">
+      <form id="calculator-form" class="card" novalidate>
+        <h2>Launch settings</h2>
+        <p class="hint">Both values are needed. The backend checks them again.</p>
+
+        <div class="field">
+          <label for="velocity">Initial velocity</label>
+          <div class="input-shell">
+            <input
+              id="velocity"
+              name="velocity"
+              type="number"
+              inputmode="decimal"
+              step="any"
+              placeholder="20"
+              required
+            >
+            <span class="unit">m/s</span>
+          </div>
+          <p class="hint">How fast the object leaves the launch point.</p>
+        </div>
+
+        <div class="field">
+          <label for="angle">Launch angle</label>
+          <div class="input-shell">
+            <input
+              id="angle"
+              name="angle"
+              type="number"
+              inputmode="decimal"
+              step="any"
+              placeholder="45"
+              required
+            >
+            <span class="unit">degrees</span>
+          </div>
+          <p class="hint">0° is flat along the ground. 90° is straight up.</p>
+        </div>
+
+        <button id="calculate-button" class="primary-button" type="submit">Calculate</button>
+        <p id="error-message" class="error" role="alert" hidden></p>
+      </form>
+
+      <section class="card results" aria-live="polite">
+        <h2>Results</h2>
+        <p id="result-summary" class="hint">Enter a velocity and an angle, then press Calculate.</p>
+
+        <dl class="result-grid">
+          <div>
+            <dt><span class="swatch cyan"></span> Range</dt>
+            <dd id="range-result">—</dd>
+          </div>
+          <div>
+            <dt><span class="swatch violet"></span> Max height</dt>
+            <dd id="height-result">—</dd>
+          </div>
+          <div>
+            <dt><span class="swatch amber"></span> Flight time</dt>
+            <dd id="time-result">—</dd>
+          </div>
+        </dl>
+
+        <p class="result-note">
+          All three numbers come from Python. The page only displays them and draws
+          the shapes, so the physics stays in one place.
+        </p>
+      </section>
+    </div>
+
+    <section class="card scene-card">
+      <div class="section-head">
+        <div>
+          <h2>3D flight view</h2>
+          <p class="hint">Drag to rotate, scroll to zoom. The ball flies in real time.</p>
+        </div>
+        <button id="replay-button" class="ghost-button" type="button" hidden>Replay flight</button>
+      </div>
+
+      <p id="scene-message" class="placeholder">
+        The 3D view appears here after you calculate.
+      </p>
+
+      <div id="scene-wrap" class="scene-wrap" hidden>
+        <canvas id="scene-canvas" aria-label="3D view of the projectile flight"></canvas>
+        <p class="scene-tip">Drag to rotate · scroll to zoom</p>
+      </div>
+
+      <ul class="legend">
+        <li><span class="key path"></span> Flight path</li>
+        <li><span class="key ball"></span> Projectile</li>
+        <li><span class="key horizontal"></span> Horizontal velocity (v cos θ)</li>
+        <li><span class="key vertical"></span> Vertical velocity (v sin θ)</li>
+        <li><span class="key gravity"></span> Gravity (9.81 m/s² down)</li>
+      </ul>
+    </section>
+
+    <section class="card guide-card">
+      <h2>How to read the 3D view</h2>
+      <p class="hint">
+        The scene is drawn from the same numbers as the results, so every arrow and
+        marker has a formula behind it.
+      </p>
+
+      <div class="guide-grid">
+        <article>
+          <h3>The cyan arrow never changes</h3>
+          <p>
+            The horizontal part of the launch speed is <code>v cos θ</code>. Nothing
+            pushes the object sideways, so this stays constant for the whole flight.
+            That is why the range is simply this speed multiplied by the flight time.
+          </p>
+        </article>
+        <article>
+          <h3>The violet arrow shrinks, flips, and grows</h3>
+          <p>
+            The vertical part starts at <code>v sin θ</code>. Gravity removes
+            9.81 m/s from it every second, so it reaches zero at the top and then
+            grows downward. The violet marker shows the maximum height.
+          </p>
+        </article>
+        <article>
+          <h3>Gravity points straight down</h3>
+          <p>
+            The red arrow is the only force in this model. Because it acts only
+            downward, the steady horizontal drift combined with the changing vertical
+            speed traces a parabola.
+          </p>
+        </article>
+        <article>
+          <h3>The ground line is the range</h3>
+          <p>
+            The line along the floor is the landing distance. Rotating the camera
+            makes it clear that the object stays in one vertical plane: this ideal
+            model has no sideways motion at all.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="card chart-card">
+      <div class="section-head">
+        <div>
+          <h2>2D trajectory graph</h2>
+          <p class="hint">Horizontal distance on the x-axis, height on the y-axis.</p>
+        </div>
+      </div>
+
+      <p id="chart-message" class="placeholder">The graph appears here after you calculate.</p>
+      <div id="chart-wrap" class="chart-wrap" hidden>
+        <canvas id="trajectory-chart" aria-label="Projectile trajectory graph"></canvas>
+      </div>
+    </section>
+
+    <section class="card formulas">
+      <h2>Equations used</h2>
+      <ul class="formula-list">
+        <li><span class="name">Range</span> <span class="math">(v² × sin 2θ) / g</span></li>
+        <li><span class="name">Maximum height</span> <span class="math">(v² × sin² θ) / (2g)</span></li>
+        <li><span class="name">Flight time</span> <span class="math">(2 × v × sin θ) / g</span></li>
+        <li><span class="name">Position at time t</span> <span class="math">x = v cos θ · t &nbsp; y = v sin θ · t − ½ g t²</span></li>
+      </ul>
+      <p class="hint">
+        θ is the launch angle measured from the horizontal. The last pair of
+        equations produces the points for both the 3D path and the 2D graph.
+      </p>
+    </section>
+
+    <footer class="footer">
+      <p>Backend: Flask at http://127.0.0.1:5000 · calculations in backend/physics.py</p>
+    </footer>
+  </main>
+
+  <!-- Chart.js draws the 2D graph. Loaded from a CDN, so there is no build step. -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+  <script src="script.js"></script>
+
+  <!-- scene3d.js builds the 3D view with three.js. It is a module because it
+       imports three.js directly from the CDN. -->
+  <script type="module" src="scene3d.js"></script>
+</body>
+</html>

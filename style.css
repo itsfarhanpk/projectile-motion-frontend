@@ -1,0 +1,539 @@
+/*
+  Theme: dark "mission control" look.
+  - deep navy background with soft colored glows
+  - frosted glass cards
+  - cyan for horizontal motion, violet for vertical motion, amber for the projectile
+  The colors are reused by the 3D view so the page and the scene match.
+*/
+
+:root {
+  /* Surfaces */
+  --bg: #070b18;
+  --bg-soft: #0c1226;
+  --card: rgba(255, 255, 255, 0.045);
+  --card-strong: rgba(255, 255, 255, 0.07);
+  --line: rgba(255, 255, 255, 0.10);
+  --line-strong: rgba(255, 255, 255, 0.18);
+
+  /* Text */
+  --text: #eef2ff;
+  --muted: #9aa6c4;
+  --faint: #6b7796;
+
+  /* Accents */
+  --cyan: #38bdf8;
+  --violet: #a78bfa;
+  --amber: #fbbf24;
+  --emerald: #34d399;
+  --danger: #fda4af;
+  --danger-bg: rgba(244, 63, 94, 0.14);
+  --danger-line: rgba(244, 63, 94, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--bg);
+  /* Three soft glows behind everything, like light spilling onto a dark wall. */
+  background-image:
+    radial-gradient(60rem 40rem at 12% -8%, rgba(56, 189, 248, 0.18), transparent 60%),
+    radial-gradient(52rem 36rem at 88% 4%, rgba(167, 139, 250, 0.16), transparent 62%),
+    radial-gradient(48rem 34rem at 50% 108%, rgba(52, 211, 153, 0.10), transparent 60%);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: "Inter", "Segoe UI", Roboto, Calibri, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 3.5rem;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  margin-bottom: 2rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+.badge .dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--emerald);
+  box-shadow: 0 0 0.75rem var(--emerald);
+}
+
+h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(2.1rem, 5vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  /* Gradient text: the background is clipped to the letter shapes. */
+  background: linear-gradient(100deg, #ffffff 10%, var(--cyan) 52%, var(--violet) 92%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.lede {
+  margin: 0;
+  max-width: 70ch;
+  color: var(--muted);
+  font-size: 1.08rem;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chips li {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--faint);
+  font-size: 0.82rem;
+}
+
+/* ---------- Cards ---------- */
+
+.card {
+  padding: 1.5rem 1.6rem 1.65rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--card);
+  /* Frosted glass. Ignored by old browsers, which just show the flat color. */
+  backdrop-filter: blur(14px);
+  box-shadow: 0 1.5rem 3rem rgba(2, 6, 23, 0.55);
+}
+
+h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.2rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  margin: 0 0 0.3rem;
+  font-size: 0.98rem;
+  font-weight: 650;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+/* ---------- Form ---------- */
+
+.field {
+  margin-top: 1.15rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.input-shell {
+  position: relative;
+}
+
+input {
+  width: 100%;
+  padding: 0.85rem 3.6rem 0.85rem 0.95rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: rgba(7, 11, 24, 0.55);
+  color: var(--text);
+  font: inherit;
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+
+input::placeholder {
+  color: var(--faint);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+}
+
+/* Unit shown inside the right edge of the box. */
+.unit {
+  position: absolute;
+  top: 50%;
+  right: 0.95rem;
+  transform: translateY(-50%);
+  color: var(--faint);
+  font-size: 0.88rem;
+  pointer-events: none;
+}
+
+.hint {
+  margin: 0.45rem 0 0;
+  color: var(--faint);
+  font-size: 0.88rem;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.primary-button {
+  width: 100%;
+  margin-top: 1.4rem;
+  padding: 0.95rem 1rem;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(100deg, var(--cyan), var(--violet));
+  color: #060a16;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow: 0 0.75rem 1.75rem rgba(56, 189, 248, 0.28);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.primary-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 1rem 2rem rgba(167, 139, 250, 0.35);
+}
+
+.primary-button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+  box-shadow: none;
+}
+
+.ghost-button {
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--card-strong);
+  color: var(--text);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.ghost-button:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+input:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+.error {
+  margin: 1rem 0 0;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--danger-line);
+  border-radius: 12px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-weight: 600;
+}
+
+/* `hidden` must win over the display values set above. */
+[hidden] {
+  display: none !important;
+}
+
+/* ---------- Results ---------- */
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1.15rem 0 0;
+}
+
+.result-grid div {
+  padding: 1rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(7, 11, 24, 0.45);
+}
+
+.result-grid dt {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.result-grid dd {
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Each result keeps the same color in the 3D view. */
+.swatch {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 2px;
+  flex: none;
+}
+
+.swatch.cyan { background: var(--cyan); box-shadow: 0 0 0.6rem var(--cyan); }
+.swatch.violet { background: var(--violet); box-shadow: 0 0 0.6rem var(--violet); }
+.swatch.amber { background: var(--amber); box-shadow: 0 0 0.6rem var(--amber); }
+
+#range-result { color: var(--cyan); }
+#height-result { color: var(--violet); }
+#time-result { color: var(--amber); }
+
+.result-note {
+  margin: 1rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px dashed var(--line);
+  color: var(--faint);
+  font-size: 0.88rem;
+}
+
+/* ---------- Section headers with a button on the right ---------- */
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: start;
+  justify-content: space-between;
+}
+
+.scene-card,
+.chart-card,
+.guide-card,
+.formulas {
+  margin-top: 1.25rem;
+}
+
+/* ---------- 3D scene ---------- */
+
+.scene-wrap {
+  position: relative;
+  height: clamp(320px, 52vh, 520px);
+  margin-top: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  /* A faint horizon glow behind the transparent WebGL canvas. */
+  background:
+    radial-gradient(70% 60% at 50% 88%, rgba(56, 189, 248, 0.14), transparent 70%),
+    linear-gradient(180deg, #070c1c 0%, #0b1226 60%, #111a35 100%);
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+}
+
+.scene-wrap:active {
+  cursor: grabbing;
+}
+
+#scene-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.scene-tip {
+  position: absolute;
+  bottom: 0.7rem;
+  left: 0.8rem;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(7, 11, 24, 0.75);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.1rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.legend .key {
+  width: 1.3rem;
+  height: 0.2rem;
+  border-radius: 999px;
+  flex: none;
+}
+
+.legend .key.path { background: var(--emerald); box-shadow: 0 0 0.6rem var(--emerald); }
+.legend .key.horizontal { background: var(--cyan); box-shadow: 0 0 0.6rem var(--cyan); }
+.legend .key.vertical { background: var(--violet); box-shadow: 0 0 0.6rem var(--violet); }
+.legend .key.gravity { background: #f87171; box-shadow: 0 0 0.6rem #f87171; }
+.legend .key.ball { background: var(--amber); box-shadow: 0 0 0.6rem var(--amber); }
+
+.placeholder {
+  margin: 1rem 0 0;
+  padding: 1rem 1.1rem;
+  border: 1px dashed var(--line-strong);
+  border-radius: 14px;
+  color: var(--muted);
+}
+
+/* ---------- 2D chart ---------- */
+
+.chart-wrap {
+  height: clamp(260px, 40vh, 380px);
+  margin-top: 1rem;
+}
+
+/* ---------- Guide (how to read the 3D view) ---------- */
+
+.guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1.1rem;
+}
+
+.guide-grid article {
+  padding: 1.1rem 1.15rem;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--cyan);
+  border-radius: 12px;
+  background: rgba(7, 11, 24, 0.4);
+}
+
+.guide-grid article:nth-child(2) { border-left-color: var(--violet); }
+.guide-grid article:nth-child(3) { border-left-color: #f87171; }
+.guide-grid article:nth-child(4) { border-left-color: var(--emerald); }
+
+.guide-grid p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.guide-grid code {
+  color: var(--text);
+  font-family: "JetBrains Mono", Consolas, "Courier New", monospace;
+  font-size: 0.88rem;
+}
+
+/* ---------- Equations ---------- */
+
+.formula-list {
+  display: grid;
+  gap: 0.6rem;
+  margin: 1.1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.formula-list li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  align-items: baseline;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(7, 11, 24, 0.4);
+}
+
+.formula-list .name {
+  font-weight: 650;
+}
+
+.formula-list .math {
+  color: var(--cyan);
+  font-family: "JetBrains Mono", Consolas, "Courier New", monospace;
+  font-size: 0.95rem;
+}
+
+.footer {
+  margin-top: 1.5rem;
+  color: var(--faint);
+  font-size: 0.85rem;
+}
+
+.footer p {
+  margin: 0;
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 880px) {
+  .page {
+    padding: 2rem 1rem 2.5rem;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 1.25rem 1.2rem 1.35rem;
+  }
+
+  .result-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Respect the system setting for reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .primary-button {
+    transition: none;
+  }
+}
